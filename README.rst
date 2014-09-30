@@ -17,10 +17,10 @@ Components
 
 * 4 Lua files, those files are to get a token and post and get a value of your variable. 
 
-   * `Post Lua file <https://github.com/ubidots/ubidots-arduino-yun/blob/master/Content/ubidots_post.lua?download=true>`_
-   * `Get Lua file <https://github.com/ubidots/ubidots-arduino-yun/blob/master/Content/ubidots_get.lua?raw=true>`_
-   * `API token Lua file <https://github.com/ubidots/ubidots-arduino-yun/blob/master/Content/ubidots.lua?raw=true>`_
-   * `Post3 lua file <https://github.com/ubidots/ubidots-arduino-yun/blob/master/Content/ubidots_post3.lua?raw=true>`_
+   * `Post Lua file <https://github.com/ubidots/ubidots-arduino-yun/blob/master/Content/ubidots_post.lua?>`_
+   * `Get Lua file <https://github.com/ubidots/ubidots-arduino-yun/blob/master/Content/ubidots_get.lua?>`_
+   * `API token Lua file <https://github.com/ubidots/ubidots-arduino-yun/blob/master/Content/ubidots.lua?>`_
+   * `Post3 lua file <https://github.com/ubidots/ubidots-arduino-yun/blob/master/Content/ubidots_post3.lua?>`_
 
 
 Install the Library
