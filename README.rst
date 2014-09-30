@@ -10,7 +10,7 @@ Components
 
 *  Arduino Yún:
 
-.. figure:: https://github.com/ubidots/ubidots-arduino-yun/blob/master/pictures/yun.jpg
+.. figure:: https://github.com/ubidots/ubidots-arduino-yun/blob/master/pictures/YUN.jpg
     :name: arduino-yún
     :align: center
     :alt: arduino-yún
