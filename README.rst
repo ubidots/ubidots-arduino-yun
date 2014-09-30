@@ -10,18 +10,23 @@ Components
 
 *  Arduino Yún:
 
-.. figure:: /_static/devices/YUN.jpg
+.. figure:: https://github.com/ubidots/ubidots-arduino-yun/blob/master/pictures/yun.jpg
     :name: arduino-yún
     :align: center
     :alt: arduino-yún
 
-* Lua files. Download `here <http://app.ubidots.com/accounts/signin/>`_
+* 4 Lua files, those files are to get a token and post and get a value of your variable. 
+
+   * `Post Lua file <https://github.com/ubidots/ubidots-arduino-yun/blob/master/Content/ubidots_post.lua?raw=true>`_
+   * `Get Lua file <https://github.com/ubidots/ubidots-arduino-yun/blob/master/Content/ubidots_get.lua?raw=true>`_
+   * `API token Lua file <https://github.com/ubidots/ubidots-arduino-yun/blob/master/Content/ubidots.lua?raw=true>`_
+   * `Post3 lua file <https://github.com/ubidots/ubidots-arduino-yun/blob/master/Content/ubidots_post3.lua?raw=true>`_
 
 
 Install the Library
 -------------------
 
-1. Download the library as a ZIP file `here <http://app.ubidots.com/accounts/signin/>`_
+1. `Download the library as a ZIP file <https://github.com/ubidots/ubidots-arduino-yun/blob/master/Content/arduinoYUN.zip?raw=true>`_
 
 2. Open the Arduino IDE and go to "Sketch" --> "Import Library" --> "Add Library".
 
@@ -32,103 +37,58 @@ Install the Library
 Add the LUA files to Arduino YÚN
 --------------------------------
 
-1. Connect your dragino to the power supply.
 
-2. Check there will be an unsecure wifi network start with Arduino Yun - xxxxxxxxxxxx show in wifi connection.
+1. Connect your YÚN to the power supply.
 
-.. figure:: /_static/devices/yun_wifi.png
-    :name: arduino-yún-wifi
+2. Check there will be an unsecure wifi network start with Arduino Yun or Dragino - xxxxxxxxxxxx show in wifi connection.
+
+.. figure:: https://github.com/ubidots/ubidots-dragino/blob/master/Content/yun_wifi.png
+    :name: yun-wifi
     :align: center
-    :alt: arduino-yún-wifi
+    :alt: yun-wifi
 
 3. Connect to this network and so we can enter 192.168.240.1 into the broswer and see the configure page of ms14. The default pass is "arduino".
 
-.. figure:: /_static/devices/yun_pass.jpg
-    :name: arduino-yún-pass
+.. figure:: https://github.com/ubidots/ubidots-dragino/blob/master/Content/yun_pass.jpg
+    :name: yun-pass
     :align: center
-    :alt: arduino-yún-pass
+    :alt: yun-pass
 
 4. Once you are connected press "system".
 
-.. figure:: /_static/devices/yun_system.jpg
-    :name: arduino-yún-system
+.. figure:: https://github.com/ubidots/ubidots-dragino/blob/master/Content/yun_system.jpg
+    :name: yun-system
     :align: center
-    :alt: arduino-yún-system
+    :alt: yun-system
 
-5. Connect dragino to your SSID and press "configure & restart". This may take several minutes.
+5. Connect YÚN to your SSID and press "configure & restart". This may take several minutes.
 
-.. figure:: /_static/devices/yun_config.jpg
-    :name: arduino-yún-config
+.. figure:: https://github.com/ubidots/ubidots-dragino/blob/master/Content/yun_config.jpg
+    :name: yun-config
     :align: center
-    :alt: arduino-yún-config
+    :alt: yun-config
 
 6. Now you can see in the port tab of the Arduino IDE (1.5.7) the dragino with the IP. Takes note of this IP.
 
-.. figure:: /_static/devices/yun_ip.jpg
-    :name: arduino-yún-ip
+.. figure:: https://github.com/ubidots/ubidots-dragino/blob/master/Content/yun_ip.jpg
+    :name: yun-ip
     :align: center
-    :alt: arduino-yún-ip
+    :alt: yun-ip
 
 7. Open WinSCP and place the IP that scored before, use SCP protocol, User: root and pass: arduino.
 
-.. figure:: /_static/devices/yun_winscp.jpg
+.. figure:: https://github.com/ubidots/ubidots-dragino/blob/master/Content/yun_winscp.jpg
     :name: winscp
     :align: center
     :alt: winscp
 
 8. Now add the lua files in the root directory. 
 
-.. figure:: /_static/devices/yun_root.jpg
-    :name: yún-root
+.. figure:: https://github.com/ubidots/ubidots-dragino/blob/master/Content/yun_root.jpg
+    :name: yun-root
     :align: center
-    :alt: yún-root
+    :alt: yun-root
 
-
-Preparing your Ubidots Account
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-In your Ubidots account, create a Data source called "Arduino Yún" and then a variable called "My variable":
-
-1. As a `logged in user <http://app.ubidots.com/accounts/signin/>`_
-   navigate to the "Sources" tab.
-
-.. figure:: /_static/devices/sources.png
-    :name: Sources Tab - Ubidots
-    :scale: 60%
-    :align: center
-    :alt: Sources Tab - Ubidots
-
-2. Create a data source called "Arduino Yún" by clicking
-   on the orange button located in the upper right corner of the screen:
-
-.. figure:: /_static/devices/new-source.png
-    :name: New Data Source
-    :scale: 60%
-    :align: center
-    :alt: New Data Source
-
-3. Click on the created Data Source and then on "Add New Variable":
-
-.. figure:: /_static/devices/yun_newvar.png
-    :name: New Variable
-    :scale: 60%
-    :align: center
-    :alt: New Variable
-
-4. Take note of the variable's ID to which you want to send data. We'll need it later to include in our core:
-
-.. figure:: /_static/devices/yun-id.png
-    :name: Variable ID
-    :scale: 60%
-    :align: center
-    :alt: Variable ID
-
-5. Create a token under "My Profile" tab. We'll need it later for our code:
-
-.. figure:: /_static/devices/electricimp_token.png
-    :name: Token creation
-    :scale: 60%
-    :align: center
-    :alt: Token creation
 
 A Quick example
 ----------------
