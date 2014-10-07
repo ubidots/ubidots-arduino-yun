@@ -1,26 +1,55 @@
-
-data1 = arg[1]
-token= arg[2]
-DEVICEID1 = arg[3]
+token = arg[1]
+data1 = arg[2]
+var1 = arg[3]
 data2 = arg[4]
-DEVICEID2 = arg[5]
+var2 = arg[5]
 data3 = arg[6]
-DEVICEID3 = arg[7]
+var3 = arg[7]
 
-URL = " http://things.ubidots.com/api"
-DataURL = URL ..  "/v1.6/collections/values"
+URL = "http://things.ubidots.com/api/v1.6/collections/values"
+data ='[{"variable":"' .. var1 .. '", "value":' .. data1 .. '},{"variable":"' .. var2 .. '", "value":' .. data2 .. '},{"variable":"' .. var3 .. '", "value":' .. data3 .. '}]'
+print(data)
 
-API_token = "\"X-Auth-Token: " .. token .. "\""
+-- Library to read command output
+local io = require "io"
 
+-- Load the http module
+local http = require "socket.http"
+http.TIMEOUT = 1
 
-values = "\'[{\"variable\":\"".. DEVICEID1 .."\", \"value\":".. data1 .."}, {\"variable\": \"".. DEVICEID2 .."\", \"value\":".. data2 .."}, {\"variable\":\"".. DEVICEID3 .."\", \"value\":".. data3 .."}]\'"                    
+-- loading ltn12 and json libraries from luci framework
+local ltn12 = require "luci.ltn12"
+local json = require "luci.json"
 
-head1 = "\"Accept: application/json; indent=4\""
-head2 = "\"Content-Type: application/json\""
-os.execute("echo postman >> /tmp/logtext.txt")
-CMD_UPDATE_SENSOR =  'curl -i --header '.. head1 .. ' --header ' .. head2 .. ' --header ' .. API_token .. ' -X POST -d ' .. values .. DataURL
-os.execute("echo ".. CMD_UPDATE_SENSOR ..">> /tmp/logtext.txt")
-os.execute(CMD_UPDATE_SENSOR)			--update sensor datapoint
+local response_body = {}
 
---Se puede armar un string largo para enviarse al lua y el identificarlo
+local response, code, response_headers = http.request{
+    url = URL,
+    method = "POST",
+    headers = {
+      ['X-Auth-Token'] = token,
+      ['Content-Type'] = "application/json",
+      ['Content-Length'] = string.len(data)
+    },
+    source = ltn12.source.string(data),
+    sink = ltn12.sink.table(response_body)
+}
 
+print("Status:", response)
+print("HTTP code:", code)
+print("Response headers:")
+if type(response_headers) == "table" then
+  for k, v in pairs(response_headers) do
+    print(k, ":", v)
+  end
+else
+  -- Would be nil, if there is an error
+  print("Not a table:", type(response_headers))
+end
+print("Response body:")
+if type(response_body) == "table" then
+  print(table.concat(response_body))
+else
+  -- Would be nil, if there is an error
+  print("Not a table:", type(response_body))
+end

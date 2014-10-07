@@ -1,7 +1,5 @@
-token= arg[1]
-DEVICEID = arg[2]
-
-URL = "http://things.ubidots.com/api/v1.6/variables/" .. DEVICEID .."/values"
+API_Key = arg[1]
+URL = "http://things.ubidots.com/api/v1.6/auth/token"
 -- Library to read command output
 local io = require "io"
 
@@ -13,9 +11,9 @@ local ltn12 = require "luci.ltn12"
 local json = require "luci.json"
 local response, code, response_headers = http.request{
     url=URL,
-    method = "GET",
+    method = "POST",
     headers = {
-      ['X-Auth-Token'] = token
+      ['X-Ubidots-ApiKey'] = API_Key
     },
     redirect = true,
     sink = ltn12.sink.file(io.stdout)

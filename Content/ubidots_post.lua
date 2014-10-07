@@ -1,21 +1,52 @@
-
-data = arg[1]
+dat = arg[1]
 token= arg[2]
 DEVICEID = arg[3]
 
 
-URL = " http://things.ubidots.com/api/v1.6/variables/"
-DataURL = URL .. DEVICEID .. "/values"
+URL = "http://things.ubidots.com/api/v1.6/variables/" .. ID .."/value"
+data = "\'{\"value\":" .. dat .."}\'"
+print(data)
 
-API_token = "\"X-Auth-Token: " .. token .. "\""
+-- Library to read command output
+local io = require "io"
 
-value = "\'{\"value\":".. data .."}\'"
+-- Load the http module
+local http = require "socket.http"
+http.TIMEOUT = 1
 
-head1 = "\"Accept: application/json; indent=4\""
-head2 = "\"Content-Type: application/json\""
-os.execute("echo postman >> /tmp/logtext.txt")
-CMD_UPDATE_SENSOR =  'curl -i --header '.. head1 .. ' --header ' .. head2 .. ' --header ' .. API_token .. ' -X POST -d ' .. value .. DataURL
-os.execute("echo ".. CMD_UPDATE_SENSOR ..">> /tmp/logtext.txt")
-os.execute(CMD_UPDATE_SENSOR)			--update sensor datapoint
+-- loading ltn12 and json libraries from luci framework
+local ltn12 = require "luci.ltn12"
+local json = require "luci.json"
 
---Se puede armar un string largo para enviarse al lua y el identificarlo
+local response_body = {}
+
+local response, code, response_headers = http.request{
+    url = URL,
+    method = "POST",
+    headers = {
+      ['X-Auth-Token'] = token,
+      ['Content-Type'] = "application/json",
+      ['Content-Length'] = string.len(data)
+    },
+    source = ltn12.source.string(data),
+    sink = ltn12.sink.table(response_body)
+}
+
+print("Status:", response)
+print("HTTP code:", code)
+print("Response headers:")
+if type(response_headers) == "table" then
+  for k, v in pairs(response_headers) do
+    print(k, ":", v)
+  end
+else
+  -- Would be nil, if there is an error
+  print("Not a table:", type(response_headers))
+end
+print("Response body:")
+if type(response_body) == "table" then
+  print(table.concat(response_body))
+else
+  -- Would be nil, if there is an error
+  print("Not a table:", type(response_body))
+end
