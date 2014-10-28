@@ -19,7 +19,7 @@ Components
 
    * `Post Lua file <https://github.com/ubidots/ubidots-arduino-yun/blob/master/Content/ubidots_post.lua?>`_
    * `Get Lua file <https://github.com/ubidots/ubidots-arduino-yun/blob/master/Content/ubidots_get.lua?>`_
-   * `API token Lua file <https://github.com/ubidots/ubidots-arduino-yun/blob/master/Content/ubidots.lua?>`_
+   * `API token Lua file <https://github.com/ubidots/ubidots-arduino-yun/blob/master/Content/ubidots_token.lua?>`_
    * `Post3 lua file <https://github.com/ubidots/ubidots-arduino-yun/blob/master/Content/ubidots_post3.lua?>`_
 
 
