@@ -1,6 +1,6 @@
 dat = arg[1]
 token= arg[2]
-DEVICEID = arg[3]
+ID = arg[3]
 
 
 URL = "http://things.ubidots.com/api/v1.6/variables/" .. ID .."/value"
