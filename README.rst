@@ -15,12 +15,10 @@ Components
     :align: center
     :alt: arduino-yún
 
-* 4 Lua files, those files are to get a token and post and get a value of your variable. 
+* 2 Lua files, those files are to get a token and post and get a value of your variable. 
 
    * `Post Lua file <https://github.com/ubidots/ubidots-arduino-yun/blob/master/Content/ubidots_post.lua?>`_
    * `Get Lua file <https://github.com/ubidots/ubidots-arduino-yun/blob/master/Content/ubidots_get.lua?>`_
-   * `API token Lua file <https://github.com/ubidots/ubidots-arduino-yun/blob/master/Content/ubidots.lua?>`_
-   * `Post3 lua file <https://github.com/ubidots/ubidots-arduino-yun/blob/master/Content/ubidots_post3.lua?>`_
 
 
 Install the Library
@@ -115,13 +113,13 @@ Here's a quick example of how to use the library, with the serial terminal of Ar
 	  This code is in the public domain.
 
 	  */
-		#include <ubidots_dragino.h>
+		#include <ubidots_arduinoYUN.h>
 		#include <Process.h>
 
 
-		String api = "5ca9b10038e49e0492c6794f9043f0918ddcbd26";                    //your API key
+		String token = "5ca9b10038e49e0492c6794f9043f0918ddcbd26";                    //your API key
 		String idvari = "53baaf3c76254244e1c8e408";                                 //this is de ID of the variaable that do you want to know
-		Ubidots ubiclient(api);                                                     //initializes the Ubidots library 
+		Ubidots ubiclient(token);                                                     //initializes the Ubidots library 
 
 		void setup() {
 		  // start serial port:
@@ -130,7 +128,6 @@ Here's a quick example of how to use the library, with the serial terminal of Ar
 
 		  while (!Console);                                                         //wait for Network Serial to open
 		  Console.println("Ubidots client");                                        
-		  ubiclient.ubitoken(api);                                                  //get the token to the communication with Ubidots
 		  delay(20);
 		  
 		}
@@ -192,16 +189,3 @@ String              idvari       ID of the variable that you want make request
 ==================  ===========  =============================================
 
 Get value from Ubidots. Returns a String containing the last value of the variable.
-
-ubitoken();
-``````````` 
-
-.. code-block:: cpp
-
-    boolean = ubiclient.ubitoken(api);  
-
-==================  ===========  =============================================
-Type                Argument     Description
-==================  ===========  =============================================
-String              api          Your API key for the Ubidots API
-==================  ===========  =============================================
