@@ -24,7 +24,7 @@ Components
 Install the Library
 -------------------
 
-1. `Download the library as a ZIP file <https://github.com/ubidots/ubidots-arduino-yun/blob/master/Content/arduinoYUN.zip?raw=true>`_
+1. `Download the library as a ZIP file <https://github.com/ubidots/ubidots-arduino-yun/raw/master/Content/UbidotsArduinoYUN.zip?raw=true>`_
 
 2. Open the Arduino IDE and go to "Sketch" --> "Import Library" --> "Add Library".
 
