@@ -151,15 +151,15 @@ Ubidots ubiclient():
 ````````````````````
 .. code-block:: cpp
 
-    Ubidots ubiclient(api);
+    Ubidots ubiclient(token);
 
 =======  ========  =================================
 Type     Argument  Description
 =======  ========  =================================
-String   api       Your API key for the Ubidots API
+String   token     Your Ubidots token
 =======  ========  =================================
 
-Initialize a Ubidots client. This is most likely to be the first Ubidots library function to call.
+Initializes a Ubidots client. This is most likely to be the first Ubidots library function to call.
 
 save_value()
 ````````````````````
@@ -173,7 +173,7 @@ String   idvari        ID of the variable to save
 String   incomingByte  The value of the sensor
 =======  ============  ====================================
 
-Save a value to Ubidots. Returns true upon success. Returns false upon error.
+Saves a a value to Ubidots. Returns true upon success. Returns false upon error.
 
 
 get_value()
@@ -188,4 +188,4 @@ Type                Argument     Description
 String              idvari       ID of the variable that you want make request 
 ==================  ===========  =============================================
 
-Get value from Ubidots. Returns a String containing the last value of the variable.
+Gets a value from Ubidots. Returns a String containing the last value of the variable.
