@@ -12,7 +12,7 @@ local io = require "io"
 
 -- Load the http module
 local http = require "socket.http"
-http.TIMEOUT = 1
+http.TIMEOUT = 5
 
 -- loading ltn12 and json libraries from luci framework
 local ltn12 = require "luci.ltn12"
