@@ -95,53 +95,44 @@ Here's a quick example of how to use the library, with the serial terminal of Ar
 
 .. code-block:: cpp
 
-	  /*
-	  Simple example for Arduino Yún
-
-	  This sketch connects to Ubidots (http://www.ubidots.com) using an Arduino Hardware
-
-	  This simple example explains the functions of the Arduino Yún library
-
-
-	  Components:
-	  * Arduino Yún
+	/*
+	Simple example for Arduino YÚN
+	This sketch connects to Ubidots (http://www.ubidots.com) using an Arduino YÚN Hardware
+	
+	Components:
+	  * Arduino YÚN Hardware
 	  * LUA files of Ubidots
-
-	  Created 5 Aug 2014
-	  by Mateo Vélez
-
-	  This code is in the public domain.
-
-	  */
-		#include <ubidots_arduinoYUN.h>
-		#include <Process.h>
-
-
-		String token = "5ca9b10038e49e0492c6794f9043f0918ddcbd26";                    //your API key
-		String idvari = "53baaf3c76254244e1c8e408";                                 //this is de ID of the variaable that do you want to know
-		Ubidots ubiclient(token);                                                     //initializes the Ubidots library 
-
-		void setup() {
-		  // start serial port:
-		  Bridge.begin();                                                           //initializes the bridge library
-		  Console.begin();                                                          //initializes the console
-
-		  while (!Console);                                                         //wait for Network Serial to open
-		  Console.println("Ubidots client");                                        
-		  delay(20);
-		  
-		}
-
-		void loop() {
-		 
-		  int incomingByte = 678;                                                   //a random value for post it to Ubidots
-		  String idvari2= "53baaf3c76254244e1c8e408";                               //the ID of the variable that do you want to post
-		  String valor;                                                             //a random variable to save the value after that you ask to the Ubidots API
-		  valor = ubiclient.get_value(idvari);                                      //the function to get the value of your variable, return the value
-		  Console.print(valor);
-		  ubiclient.save_value(idvari2,String(incomingByte));                       //the function to save value in your variable
-		  
-		}
+	
+	Created 5 Aug 2014
+	by Mateo Vélez
+	
+	This code is in the public domain.
+	
+	*/
+	#include <ubidots_arduinoYUN.h>
+	#include <Process.h>
+	
+	
+	String token = "7lIgBfuGWCh56j1ucunhfnYrMPLJh1";                    //your Ubidots token
+	String idvari = "546b83dd7625421b7c01ac75";                                   //this is de ID of the variaable that do you want to know
+	Ubidots ubiclient(token);                                                     //initializes the Ubidots library 
+	
+	void setup() {
+	  // start serial port:
+	  Bridge.begin();                                                            //initializes the bridge library
+	  Console.begin();                                                           //initializes the console                     
+	  Console.println("Ubidots client");                                          
+	}
+	
+	void loop() {
+	  int value = 2014;                                                          //an arbitrary value to be sent to Ubidots
+	  ubiclient.save_value(idvari,String(value));                                //the function to save value in your variable 
+	
+	  Console.println("Reading last value...");  
+	  String incomingValue;                                                      
+	  incomingValue = ubiclient.get_value(idvari);                               //reads value from the Ubidots variable
+	  Console.println(incomingValue);
+	}
 
 
 Explanation of the functions of the library
