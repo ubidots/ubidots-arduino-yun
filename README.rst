@@ -96,15 +96,15 @@ Here's a quick example of how to use the library, with the serial terminal of Ar
 .. code-block:: cpp
 
 	  /*
-	  Simple example to Dragino
+	  Simple example for Arduino Yún
 
-	  This sketch connects to Ubidots (http://www.ubidots.com) using an Dragino Hardware
+	  This sketch connects to Ubidots (http://www.ubidots.com) using an Arduino Hardware
 
-	  Is a simple example to explain the functions of the Dragino library
+	  This simple example explains the functions of the Arduino Yún library
 
 
 	  Components:
-	  * Dragino Hardware
+	  * Arduino Yún
 	  * LUA files of Ubidots
 
 	  Created 5 Aug 2014
