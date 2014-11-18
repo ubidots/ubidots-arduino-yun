@@ -2,10 +2,8 @@ dat = arg[1]
 token= arg[2]
 ID = arg[3]
 
-
-URL = "http://things.ubidots.com/api/v1.6/variables/" .. ID .."/value"
-data = "\'{\"value\":" .. dat .."}\'"
-print(data)
+URL = "http://things.ubidots.com/api/v1.6/variables/" .. ID .."/values?token=" .. token
+data = '{"value":'.. dat .. '}'
 
 -- Library to read command output
 local io = require "io"
@@ -24,7 +22,6 @@ local response, code, response_headers = http.request{
     url = URL,
     method = "POST",
     headers = {
-      ['X-Auth-Token'] = token,
       ['Content-Type'] = "application/json",
       ['Content-Length'] = string.len(data)
     },
