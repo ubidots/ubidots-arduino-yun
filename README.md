@@ -32,17 +32,15 @@ Make sure your Arduino is powered by a 1 amp or higher rated external power supp
     
 ## Send one value to Ubidots
 
-To send a value to Ubidots, go to **Sketch -> Examples -> UbidotsYUN library** and select the "saveValue" example. 
-Put your Ubidots token and variable ID where indicated, as well as the WiFi settings.
-Upload the code, open the Serial monitor to check the results. If no response is seen, try unplugging your Arduino and then plugging it again. Make sure the baud rate of the Serial monitor is set to the same one specified in your code.
+To send a value to Ubidots, go to **Sketch -> Examples -> UbidotsYUN library** and select the "saveValue" example. Set your Ubidots personal **TOKEn**
 
 ```c++
 #include <UbidotsYUN.h>
 #define TOKEN "YOUR_TOKEN_HERE"
-#define ID "YOUR_ID_HERE"
 
 
 Ubidots client(TOKEN);
+
 void setup() {
   client.init();
   Serial.begin(9600);
@@ -50,8 +48,11 @@ void setup() {
 }
 
 void loop() {
-  client.saveValue(ID, 325.5235);
+  float value = analogRead(A0);
+  client.add("Variable_Name", value);
+  client.sendAll(); 
 }
+
 ```
 
 
@@ -75,6 +76,36 @@ void setup() {
 
 void loop() {
   float value = client.getValue(ID);
+}
+
+```
+
+
+## Send multiple values to Ubidots
+
+To send multiple values you can use our example in our library or copy the next code and do not forget to change set there your **TOKEN**
+
+```c
+#include <UbidotsYUN.h>
+#define TOKEN "YOUR_TOKEN_HERE"
+
+
+Ubidots client(TOKEN);
+
+void setup() {
+  client.init();
+  Serial.begin(9600);
+
+}
+
+void loop() {
+  float value = analogRead(A0);
+  float value1 = analogRead(A1);
+  float value2 = analogRead(A2);
+  client.add("Variable_Name", value);
+  client.add("Variable_Name_2", value1);
+  client.add("Variable_Name_3", value2);
+  client.sendAll(); 
 }
 
 ```
