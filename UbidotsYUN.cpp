@@ -1,3 +1,28 @@
+/*
+Copyright (c) 2013-2016 Ubidots.
+
+Permission is hereby granted, free of charge, to any person obtaining
+a copy of this software and associated documentation files (the
+"Software"), to deal in the Software without restriction, including
+without limitation the rights to use, copy, modify, merge, publish,
+distribute, sublicense, and/or sell copies of the Software, and to
+permit persons to whom the Software is furnished to do so, subject to
+the following conditions:
+
+The above copyright notice and this permission notice shall be
+included in all copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
+EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
+MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
+NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE
+LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION
+OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION
+WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+
+Made by Mateo Velez - Metavix for Ubidots Inc
+*/
+
 #include "UbidotsYUN.h"
 #include <Process.h>
 /**
@@ -5,7 +30,28 @@
  */
 Ubidots::Ubidots(char* token){ 
     _token = token;
+    _dsName = "YUN";
+    _dsTag = "YUN";
+    val = (Value *)malloc(MAX_VALUES*sizeof(Value));
+
 }
+/** 
+ * This function set a data source tag
+ * @arg tag the tag to set
+ */
+void Ubidots::setDataSourceTag(char *tag) {
+    _dsTag = tag;
+}
+/** 
+ * This function set a data source name
+ * @arg name the name to set
+ */
+void Ubidots::setDataSourceName(char *name) {
+    _dsName = name;
+}
+/** 
+ * This function start the YUN device
+ */
 void Ubidots::init(){
   
     pinMode(13, OUTPUT);
@@ -77,34 +123,50 @@ float Ubidots::getValue(String id){
     return num;
   
 }
-
-bool Ubidots::saveValue(String id, float value){
-    Process _client;
-    String TOKEN = _token;
-    String url;
-    String token;
-    String data;
-    String headers;
-    String all;
-    url = "http://things.ubidots.com/api/v1.6/variables/"+id;
-    url += "/values";
-    token = " \"X-Auth-Token: "+TOKEN;
-    token += "\" ";
-    data = "\'{\"value\":"+String(value,5);
-    data += "}\' ";
-    headers = "curl -i --header \"Accept: application/json; indent=4\" --header \"Content-Type: application/json\" --header"+token;
-    headers += "-X POST -d ";
-    all = headers + data;
-    all += url;
-    /*Serial.println(token);
-    Serial.println(url);
-    Serial.println(data);
-    Serial.println(all);*/
-    _client.runShellCommand(all);
-    while(!_client.available());
-    while (_client.available()) {
-        char c = _client.read();
-        //Serial.print(c);
+/** 
+ * This function is to save data to the YUN cache
+ * @arg id the name of your variable
+ * @arg value the value to save
+ * @arg ctext the context to save
+ */
+void Ubidots::add(char *id, float value, char *ctext) {
+    (val+currentValue)->idName = id;
+    (val+currentValue)->idValue = value;
+    (val+currentValue)->context = ctext;
+    currentValue++;
+    if(currentValue > MAX_VALUES) {
+        currentValue = MAX_VALUES;
     }
-    Serial.flush();   
+}
+/** 
+ * This function is to send all data saved in add function
+ */
+void Ubidots::sendAll() {
+    Process _client;
+    int i;
+    String value;
+    char buffer[400];
+    sprintf(buffer, "(sleep 1\necho \"");
+    if (_dsName == "YUN") {
+        sprintf(buffer, "%s%s%s|POST|%s|%s=>", buffer, USER_AGENT, VERSION, _token, _dsTag);
+    } else {
+        sprintf(buffer, "%s%s%s|POST|%s|%s:%s=>", buffer, USER_AGENT, VERSION, _token, _dsTag, _dsName);
+    }
+    for (i = 0; i < currentValue; ) {
+        value = String((val + i)->idValue, 2);
+        sprintf(buffer, "%s%s:%s", buffer, (val + i)->idName, value.c_str());
+        if ((val + i)->context != NULL) {
+            sprintf(buffer, "%s\\$%s", buffer, (val + i)->context);
+        }
+        i++;
+        if (i < currentValue) {
+            sprintf(buffer, "%s,", buffer);
+        }
+    }
+    sprintf(buffer, "%s|end\") | telnet %s %s", buffer, SERVER, PORT);
+    SerialUSB.println(buffer);
+    _client.runShellCommand(buffer);
+    while (_client.running());
+    Serial.flush();
+    currentValue = 0;
 }
