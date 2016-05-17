@@ -10,6 +10,8 @@ The Arduino Yún is a microcontroller board based on the ATmega32u4 and the Athe
 * [Arduino IDE 1.6.5 or higher](https://www.arduino.cc/en/Main/Software)
 * [Ubidots Arduino YÚN library](https://github.com/ubidots/ubidots-arduino-yun/archive/master.zip)
 
+<aside class="warning">In this code when you save the value the library will save that value in a default data source name, named YUN. If you want to change that please go to the library and use the setDataSourceName function.</aside>
+
 ## Setup
 
 1. Connect your Arduino Yún to the power supply.
