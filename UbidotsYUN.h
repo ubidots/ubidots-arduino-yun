@@ -51,7 +51,7 @@ class Ubidots {
       float getValue(String id);
       void add(char* id, float value, char* ctext = NULL);
       void setDataSourceTag(char *tag);
-      void setDataSourceName(char *name); 
+      void setDataSourceName(char *name);
       void sendAll();
    private:
       char* _token;
