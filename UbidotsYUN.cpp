@@ -28,38 +28,38 @@ Made by Mateo Velez - Metavix for Ubidots Inc
 /**
  * Constructor.
  */
-Ubidots::Ubidots(char* token){ 
+Ubidots::Ubidots(char* token){
     _token = token;
     _dsName = "YUN";
     _dsTag = "YUN";
     val = (Value *)malloc(MAX_VALUES*sizeof(Value));
 
 }
-/** 
+/**
  * This function set a data source tag
  * @arg tag the tag to set
  */
 void Ubidots::setDataSourceTag(char *tag) {
     _dsTag = tag;
 }
-/** 
+/**
  * This function set a data source name
  * @arg name the name to set
  */
 void Ubidots::setDataSourceName(char *name) {
     _dsName = name;
 }
-/** 
+/**
  * This function start the YUN device
  */
 void Ubidots::init(){
-  
+
     pinMode(13, OUTPUT);
     digitalWrite(13, LOW);
     Bridge.begin();
     digitalWrite(13, HIGH);
 }
-/** 
+/**
  * This function is to get value from the Ubidots API
  * @arg id the id where you will get the data
  * @return num the data that you get from the Ubidots API
@@ -72,15 +72,15 @@ float Ubidots::parseValue(char *body){
   uint8_t bodyPosinit = 0;
   uint8_t bodyPosend = 0;
   pch = strstr(body,"\"value\":");
-  raw = String(pch);  
+  raw = String(pch);
   bodyPosinit = 9 + raw.indexOf("\"value\":");
   bodyPosend = raw.indexOf(", \"timestamp\"");
   raw.substring(bodyPosinit,bodyPosend).toCharArray(reply, 25);
   Serial.println(reply);
-  num = atof(reply); 
+  num = atof(reply);
   return num;
 }
-/** 
+/**
  * This function is to get value from the Ubidots API
  * @arg id the id where you will get the data
  * @return num the data that you get from the Ubidots API
@@ -121,9 +121,9 @@ float Ubidots::getValue(String id){
     num = parseValue(c);
     Serial.flush();
     return num;
-  
+
 }
-/** 
+/**
  * This function is to save data to the YUN cache
  * @arg id the name of your variable
  * @arg value the value to save
@@ -138,12 +138,12 @@ void Ubidots::add(char *id, float value, char *ctext) {
         currentValue = MAX_VALUES;
     }
 }
-/** 
+/**
  * This function is to send all data saved in add function
  */
 void Ubidots::sendAll() {
     Process _client;
-    int i;
+    /*int i;
     String value;
     char buffer[400];
     sprintf(buffer, "(sleep 1\necho \"");
@@ -154,9 +154,14 @@ void Ubidots::sendAll() {
     }
     for (i = 0; i < currentValue; ) {
         value = String((val + i)->idValue, 2);
-        sprintf(buffer, "%s%s:%s", buffer, (val + i)->idName, value.c_str());
         if ((val + i)->context != NULL) {
-            sprintf(buffer, "%s\\$%s", buffer, (val + i)->context);
+            sprintf(buffer, "%s{%s:%s", buffer, (val + i)->idName, value.c_str());
+            //sprintf(buffer, "%s\\$%s", buffer, (val + i)->context);
+            sprintf(buffer, "%s,\"context\":{%s}}", buffer, (val + i)->context);
+        }
+        else
+        {
+          sprintf(buffer, "%s%s:%s", buffer, (val + i)->idName, value.c_str());
         }
         i++;
         if (i < currentValue) {
@@ -166,6 +171,17 @@ void Ubidots::sendAll() {
     sprintf(buffer, "%s|end\") | telnet %s %s", buffer, SERVER, PORT);
     SerialUSB.println(buffer);
     _client.runShellCommand(buffer);
+    while (_client.running());*/
+    int i;
+    String value;
+    char buffer[500];
+    sprintf(buffer,"curl -X POST -H \"Content-Type: application/json\" -d '[");
+    for(i=0;i<currentValue;)
+    {
+      
+    }
+    SerialUSB.println("curl -X POST -H \"Content-Type: application/json\" -d '[{\"variable\":\"573cb6ad7625422269e25ff2\",\"value\": \"83\", \"context\": {\"API\": \"TurboHack2\"}}]' http://things.ubidots.com/api/v1.6/collections/values/?token=6GndHZDciqD4TpEZmbEYm5B8UhfOBI");
+    _client.runShellCommand("curl -X POST -H \"Content-Type: application/json\" -d '[{\"variable\":\"573cb6ad7625422269e25ff2\",\"value\": \"83\", \"context\": {\"API\": \"TurboHack2\"}}]' http://things.ubidots.com/api/v1.6/collections/values/?token=6GndHZDciqD4TpEZmbEYm5B8UhfOBI");
     while (_client.running());
     Serial.flush();
     currentValue = 0;
