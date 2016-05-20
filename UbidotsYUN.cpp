@@ -21,6 +21,7 @@ OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION
 WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 Made by Mateo Velez - Metavix for Ubidots Inc
+Modified by Kosme - Hormiga Azul
 */
 
 #include "UbidotsYUN.h"
@@ -125,7 +126,7 @@ float Ubidots::getValue(String id){
 }
 /**
  * This function is to save data to the YUN cache
- * @arg id the name of your variable
+ * @arg id the id of your variable
  * @arg value the value to save
  * @arg ctext the context to save
  */
