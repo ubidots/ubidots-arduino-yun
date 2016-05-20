@@ -143,43 +143,21 @@ void Ubidots::add(char *id, float value, char *ctext) {
  */
 void Ubidots::sendAll() {
     Process _client;
-    /*int i;
-    String value;
-    char buffer[400];
-    sprintf(buffer, "(sleep 1\necho \"");
-    if (_dsName == "YUN") {
-        sprintf(buffer, "%s%s%s|POST|%s|%s=>", buffer, USER_AGENT, VERSION, _token, _dsTag);
-    } else {
-        sprintf(buffer, "%s%s%s|POST|%s|%s:%s=>", buffer, USER_AGENT, VERSION, _token, _dsTag, _dsName);
-    }
-    for (i = 0; i < currentValue; ) {
-        value = String((val + i)->idValue, 2);
-        if ((val + i)->context != NULL) {
-            sprintf(buffer, "%s{%s:%s", buffer, (val + i)->idName, value.c_str());
-            //sprintf(buffer, "%s\\$%s", buffer, (val + i)->context);
-            sprintf(buffer, "%s,\"context\":{%s}}", buffer, (val + i)->context);
-        }
-        else
-        {
-          sprintf(buffer, "%s%s:%s", buffer, (val + i)->idName, value.c_str());
-        }
-        i++;
-        if (i < currentValue) {
-            sprintf(buffer, "%s,", buffer);
-        }
-    }
-    sprintf(buffer, "%s|end\") | telnet %s %s", buffer, SERVER, PORT);
-    SerialUSB.println(buffer);
-    _client.runShellCommand(buffer);
-    while (_client.running());*/
     int i;
     String value;
     char buffer[500];
     sprintf(buffer,"curl -X POST -H \"Content-Type: application/json\" -d '[");
     for(i=0;i<currentValue;)
     {
-      
+      value = String((val + i )->idValue,2);
+      sprintf(buffer, "%s{\"variable\":\"%s\", \"value\": \"%s\", \"context\": {%s}}", buffer, (val + i)->idName, value.c_str(), (val + i)->context);
+      i++;
+      if(i<currentValue)
+      {
+        sprintf(buffer,"%s, ",buffer);
+      }
     }
+    sprintf(buffer,"%s]' http://things.ubidots.com/api/v1.6/collections/values/?token=%s", buffer, _token);
     SerialUSB.println("curl -X POST -H \"Content-Type: application/json\" -d '[{\"variable\":\"573cb6ad7625422269e25ff2\",\"value\": \"83\", \"context\": {\"API\": \"TurboHack2\"}}]' http://things.ubidots.com/api/v1.6/collections/values/?token=6GndHZDciqD4TpEZmbEYm5B8UhfOBI");
     _client.runShellCommand("curl -X POST -H \"Content-Type: application/json\" -d '[{\"variable\":\"573cb6ad7625422269e25ff2\",\"value\": \"83\", \"context\": {\"API\": \"TurboHack2\"}}]' http://things.ubidots.com/api/v1.6/collections/values/?token=6GndHZDciqD4TpEZmbEYm5B8UhfOBI");
     while (_client.running());
