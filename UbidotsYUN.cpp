@@ -99,7 +99,7 @@ float Ubidots::getValue(String id){
     url += "/values?page_size=1";
     token = " \"X-Auth-Token: "+TOKEN;
     token += "\" ";
-    headers = "curl --header \"Accept: application/json; indent=4\" --header"+token;
+    headers = "curl --header \"Accept: application/json\" --header"+token;
     headers += "-X GET ";
     /*Serial.println(token);
     Serial.println(url);
