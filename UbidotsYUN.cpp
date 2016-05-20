@@ -158,8 +158,8 @@ void Ubidots::sendAll() {
       }
     }
     sprintf(buffer,"%s]' http://things.ubidots.com/api/v1.6/collections/values/?token=%s", buffer, _token);
-    SerialUSB.println("curl -X POST -H \"Content-Type: application/json\" -d '[{\"variable\":\"573cb6ad7625422269e25ff2\",\"value\": \"83\", \"context\": {\"API\": \"TurboHack2\"}}]' http://things.ubidots.com/api/v1.6/collections/values/?token=6GndHZDciqD4TpEZmbEYm5B8UhfOBI");
-    _client.runShellCommand("curl -X POST -H \"Content-Type: application/json\" -d '[{\"variable\":\"573cb6ad7625422269e25ff2\",\"value\": \"83\", \"context\": {\"API\": \"TurboHack2\"}}]' http://things.ubidots.com/api/v1.6/collections/values/?token=6GndHZDciqD4TpEZmbEYm5B8UhfOBI");
+    SerialUSB.println(buffer);
+    _client.runShellCommand(buffer);
     while (_client.running());
     Serial.flush();
     currentValue = 0;
