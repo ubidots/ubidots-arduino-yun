@@ -66,14 +66,11 @@ void Ubidots::init(){
  * @return num the data that you get from the Ubidots API
  */
 float Ubidots::parseValue(char *body){
-  String raw;
-  char *pch;
   float num;
   char reply[25];
   uint8_t bodyPosinit = 0;
   uint8_t bodyPosend = 0;
-  pch = strstr(body,"\"value\":");
-  raw = String(pch);
+  String raw = strstr(body,"\"value\":");
   bodyPosinit = 9 + raw.indexOf("\"value\":");
   bodyPosend = raw.indexOf(", \"timestamp\"");
   raw.substring(bodyPosinit,bodyPosend).toCharArray(reply, 25);
