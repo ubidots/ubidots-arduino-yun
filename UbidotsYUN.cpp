@@ -91,21 +91,14 @@ float Ubidots::getValue(String id){
     float num;
     char c[400];
     int i = 0;
-    String TOKEN = _token;
-    String token;
-    String headers;
-    String url;
-    url = "http://things.ubidots.com/api/v1.6/variables/"+id;
-    url += "/values?page_size=1";
-    token = " \"X-Auth-Token: "+TOKEN;
-    token += "\" ";
-    headers = "curl --header \"Accept: application/json\" --header"+token;
-    headers += "-X GET ";
+    String command = "curl http://things.ubidots.com/api/v1.6/variables/";
+    command += id;
+    command += "/values?page_size=1?token=";
+    command += _token;
     /*Serial.println(token);
     Serial.println(url);
     Serial.println(all);*/
-    _client.runShellCommand(headers + url);
-    url = "";
+    _client.runShellCommand(command);
     while(!_client.available());
     while (_client.available()&& i<400) {
         c[i] = _client.read();
