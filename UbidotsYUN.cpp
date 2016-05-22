@@ -149,7 +149,7 @@ void Ubidots::sendAll() {
     for(i=0;i<currentValue;i++)
     {
       sprintf(buffer,"curl -X POST -H \"Content-Type: application/json\" -d ");
-      sprintf(buffer, "'%s{\"value\": \"%f\", \"context\": {%s}}'", buffer, (val + i)->idValue, (val + i)->context);
+      sprintf(buffer, "%s'{\"value\": \"%f\", \"context\": {%s}}'", buffer, (val + i)->idValue, (val + i)->context);
       sprintf(buffer,"%s http://things.ubidots.com/api/v1.6/variables/%s/?token=%s", buffer,(val+i)->idName, _token);
       SerialUSB.println(buffer);
       _client.runShellCommand(buffer);
