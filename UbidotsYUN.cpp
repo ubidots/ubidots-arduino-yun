@@ -145,23 +145,17 @@ void Ubidots::add(char *id, float value, char *ctext) {
 void Ubidots::sendAll() {
     Process _client;
     int i;
-    String value;
     char buffer[500];
-    sprintf(buffer,"curl -X POST -H \"Content-Type: application/json\" -d '[");
-    for(i=0;i<currentValue;)
+    for(i=0;i<currentValue;i++)
     {
-      value = String((val + i )->idValue,2);
-      sprintf(buffer, "%s{\"variable\":\"%s\", \"value\": \"%s\", \"context\": {%s}}", buffer, (val + i)->idName, value.c_str(), (val + i)->context);
-      i++;
-      if(i<currentValue)
-      {
-        sprintf(buffer,"%s, ",buffer);
-      }
+      sprintf(buffer,"curl -X POST -H \"Content-Type: application/json\" -d ");
+      sprintf(buffer, "'%s{\"value\": \"%f\", \"context\": {%s}}'", buffer, (val + i)->idValue, (val + i)->context);
+      sprintf(buffer,"%s http://things.ubidots.com/api/v1.6/variables/%s/?token=%s", buffer,(val+i)->idName, _token);
+      SerialUSB.println(buffer);
+      _client.runShellCommand(buffer);
+      while (_client.running());
+      Serial.flush();
+      sprintf(buffer,"");//Limpiar buffer
     }
-    sprintf(buffer,"%s]' http://things.ubidots.com/api/v1.6/collections/values/?token=%s", buffer, _token);
-    SerialUSB.println(buffer);
-    _client.runShellCommand(buffer);
-    while (_client.running());
-    Serial.flush();
     currentValue = 0;
 }
