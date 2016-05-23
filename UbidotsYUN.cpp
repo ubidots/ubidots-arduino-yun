@@ -88,10 +88,11 @@ float Ubidots::getValue(String id){
     float num;
     char c[400];
     int i = 0;
-    String command = "curl http://things.ubidots.com/api/v1.6/variables/";
+    String command = "curl \"http://things.ubidots.com/api/v1.6/variables/";
     command += id;
-    command += "/values?page_size=1?token=";
+    command += "/values?page_size=1\&token=";
     command += _token;
+    command += "\"";
     /*Serial.println(token);
     Serial.println(url);
     Serial.println(all);*/
@@ -107,7 +108,7 @@ float Ubidots::getValue(String id){
         _client.read();
         //Serial.print(c);
     }
-    //Serial.println(url);
+    Serial.println(command);
     i = 0;
     num = parseValue(c);
     Serial.flush();
@@ -144,7 +145,7 @@ void Ubidots::sendAll() {
       command += (val + i)->context;
       command += "}}' http://things.ubidots.com/api/v1.6/variables/";
       command += (val+i)->idName;
-      command += "/?token=";
+      command += "/values/?token=";
       command += _token;
       SerialUSB.println(command);
       _client.runShellCommand(command);
