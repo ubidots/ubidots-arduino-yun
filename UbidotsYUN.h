@@ -21,6 +21,7 @@ OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION
 WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 Made by Mateo Velez - Metavix for Ubidots Inc
+Modified by Kosme - Hormiga Azul
 */
 
 #ifndef _UbidotsYUN_H_
@@ -51,7 +52,7 @@ class Ubidots {
       float getValue(String id);
       void add(char* id, float value, char* ctext = NULL);
       void setDataSourceTag(char *tag);
-      void setDataSourceName(char *name); 
+      void setDataSourceName(char *name);
       void sendAll();
    private:
       char* _token;

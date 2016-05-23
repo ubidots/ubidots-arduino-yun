@@ -21,6 +21,7 @@ OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION
 WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 Made by Mateo Velez - Metavix for Ubidots Inc
+Modified by Kosme - Hormiga Azul
 */
 
 #include "UbidotsYUN.h"
@@ -28,59 +29,56 @@ Made by Mateo Velez - Metavix for Ubidots Inc
 /**
  * Constructor.
  */
-Ubidots::Ubidots(char* token){ 
+Ubidots::Ubidots(char* token){
     _token = token;
     _dsName = "YUN";
     _dsTag = "YUN";
     val = (Value *)malloc(MAX_VALUES*sizeof(Value));
 
 }
-/** 
+/**
  * This function set a data source tag
  * @arg tag the tag to set
  */
 void Ubidots::setDataSourceTag(char *tag) {
     _dsTag = tag;
 }
-/** 
+/**
  * This function set a data source name
  * @arg name the name to set
  */
 void Ubidots::setDataSourceName(char *name) {
     _dsName = name;
 }
-/** 
+/**
  * This function start the YUN device
  */
 void Ubidots::init(){
-  
+
     pinMode(13, OUTPUT);
     digitalWrite(13, LOW);
     Bridge.begin();
     digitalWrite(13, HIGH);
 }
-/** 
+/**
  * This function is to get value from the Ubidots API
  * @arg id the id where you will get the data
  * @return num the data that you get from the Ubidots API
  */
 float Ubidots::parseValue(char *body){
-  String raw;
-  char *pch;
   float num;
   char reply[25];
   uint8_t bodyPosinit = 0;
   uint8_t bodyPosend = 0;
-  pch = strstr(body,"\"value\":");
-  raw = String(pch);  
+  String raw = strstr(body,"\"value\":");
   bodyPosinit = 9 + raw.indexOf("\"value\":");
   bodyPosend = raw.indexOf(", \"timestamp\"");
   raw.substring(bodyPosinit,bodyPosend).toCharArray(reply, 25);
   Serial.println(reply);
-  num = atof(reply); 
+  num = atof(reply);
   return num;
 }
-/** 
+/**
  * This function is to get value from the Ubidots API
  * @arg id the id where you will get the data
  * @return num the data that you get from the Ubidots API
@@ -90,21 +88,15 @@ float Ubidots::getValue(String id){
     float num;
     char c[400];
     int i = 0;
-    String TOKEN = _token;
-    String token;
-    String headers;
-    String url;
-    url = "http://things.ubidots.com/api/v1.6/variables/"+id;
-    url += "/values?page_size=1";
-    token = " \"X-Auth-Token: "+TOKEN;
-    token += "\" ";
-    headers = "curl --header \"Accept: application/json; indent=4\" --header"+token;
-    headers += "-X GET ";
+    String command = "curl \"http://things.ubidots.com/api/v1.6/variables/";
+    command += id;
+    command += "/values?page_size=1\&token=";
+    command += _token;
+    command += "\"";
     /*Serial.println(token);
     Serial.println(url);
     Serial.println(all);*/
-    _client.runShellCommand(headers + url);
-    url = "";
+    _client.runShellCommand(command);
     while(!_client.available());
     while (_client.available()&& i<400) {
         c[i] = _client.read();
@@ -116,16 +108,16 @@ float Ubidots::getValue(String id){
         _client.read();
         //Serial.print(c);
     }
-    //Serial.println(url);
+    Serial.println(command);
     i = 0;
     num = parseValue(c);
     Serial.flush();
     return num;
-  
+
 }
-/** 
+/**
  * This function is to save data to the YUN cache
- * @arg id the name of your variable
+ * @arg id the id of your variable
  * @arg value the value to save
  * @arg ctext the context to save
  */
@@ -138,35 +130,28 @@ void Ubidots::add(char *id, float value, char *ctext) {
         currentValue = MAX_VALUES;
     }
 }
-/** 
+/**
  * This function is to send all data saved in add function
  */
 void Ubidots::sendAll() {
     Process _client;
     int i;
-    String value;
-    char buffer[400];
-    sprintf(buffer, "(sleep 1\necho \"");
-    if (_dsName == "YUN") {
-        sprintf(buffer, "%s%s%s|POST|%s|%s=>", buffer, USER_AGENT, VERSION, _token, _dsTag);
-    } else {
-        sprintf(buffer, "%s%s%s|POST|%s|%s:%s=>", buffer, USER_AGENT, VERSION, _token, _dsTag, _dsName);
+    String command;
+    for(i=0;i<currentValue;i++)
+    {
+      command = "curl -X POST -H \"Content-Type: application/json\" -d '{\"value\":\"";
+      command += (val+i)->idValue;
+      command += "\",\"context\":{";
+      command += (val + i)->context;
+      command += "}}' http://things.ubidots.com/api/v1.6/variables/";
+      command += (val+i)->idName;
+      command += "/values/?token=";
+      command += _token;
+      SerialUSB.println(command);
+      _client.runShellCommand(command);
+      while (_client.running());
+      Serial.flush();
+      command = "";
     }
-    for (i = 0; i < currentValue; ) {
-        value = String((val + i)->idValue, 2);
-        sprintf(buffer, "%s%s:%s", buffer, (val + i)->idName, value.c_str());
-        if ((val + i)->context != NULL) {
-            sprintf(buffer, "%s\\$%s", buffer, (val + i)->context);
-        }
-        i++;
-        if (i < currentValue) {
-            sprintf(buffer, "%s,", buffer);
-        }
-    }
-    sprintf(buffer, "%s|end\") | telnet %s %s", buffer, SERVER, PORT);
-    SerialUSB.println(buffer);
-    _client.runShellCommand(buffer);
-    while (_client.running());
-    Serial.flush();
     currentValue = 0;
 }
