@@ -31,7 +31,7 @@ Made by Mateo Velez - Metavix for Ubidots Inc
 #define PORT "9010"
 #define MAX_VALUES 5
 #define USER_AGENT "YUN"
-#define VERSION "/1.0"
+#define VERSION "1.0"
 
 typedef struct Value {
     char  *idName;
