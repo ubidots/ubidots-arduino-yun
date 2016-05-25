@@ -174,8 +174,9 @@ void Ubidots::sendAll() {
 }
 // Old functions of the library
 
-bool Ubidots::saveValue(String id, float value){
+bool Ubidots::saveValue(String id, float value) {
     Process _client;
+    int timeout = 0;
     String TOKEN = _token;
     String url;
     String token;
@@ -186,7 +187,7 @@ bool Ubidots::saveValue(String id, float value){
     url += "/values";
     token = " \"X-Auth-Token: "+TOKEN;
     token += "\" ";
-    data = "\'{\"value\":"+String(value,5);
+    data = "\'{\"value\":" + String(value, 5);
     data += "}\' ";
     headers = "curl -i --header \"Accept: application/json; indent=4\" --header \"Content-Type: application/json\" --header"+token;
     headers += "-X POST -d ";
@@ -197,9 +198,12 @@ bool Ubidots::saveValue(String id, float value){
     Serial.println(data);
     Serial.println(all);*/
     _client.runShellCommand(all);
-    while(!_client.available());
+    while (!_client.available() && timeout > 10000) {
+        timeout++;
+        delay(1);
+    }
     while (_client.available()) {
         char c = _client.read();
     }
-    Serial.flush();   
+    Serial.flush();
 }
