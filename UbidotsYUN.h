@@ -41,13 +41,16 @@ typedef struct Value {
 
 class Ubidots {
  public:
-      explicit Ubidots(char* token);
+      explicit Ubidots(char* token, char* server = SERVER);
       void init();
       float getValue(String id);
       void add(char* id, float value, char* ctext = NULL);
       void setDataSourceTag(char *tag);
       void setDataSourceName(char *name);
       void sendAll();
+      // Old functions
+      bool saveValue(String id, float value);
+
  private:
       char* _token;
       char* _dsName;
