@@ -4,6 +4,8 @@ Ubidots-Arduino-YUN is an Arduino library for interacting with Ubidots through i
 
 The Arduino Yún is a microcontroller board based on the ATmega32u4 and the Atheros AR9331. The Atheros processor supports a Linux distribution based on OpenWrt named OpenWrt-Yun. The board has built-in Ethernet and WiFi support, a USB-A port, micro-SD card slot, 20 digital input/output pins, a 16 MHz crystal oscillator, and a micro USB connection.
 
+<aside class="warning">We upgrade the library to send values with name of a variable because the YUN library to run shell command in linux has small buffer to save a message.</aside>
+
 ## Requiremets
 
 * [Arduino YÚN](https://www.arduino.cc/en/Main/ArduinoBoardYun)
@@ -111,3 +113,4 @@ void loop() {
 }
 
 ```
+

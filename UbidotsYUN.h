@@ -25,18 +25,13 @@ Made by Mateo Velez - Metavix for Ubidots Inc
 
 #ifndef _UbidotsYUN_H_
 #define _UbidotsYUN_H_
-
+#include <Process.h>
 
 #define SERVER "translate.ubidots.com"
 #define PORT "9010"
 #define MAX_VALUES 5
 #define USER_AGENT "YUN"
-#define VERSION "/1.0"
-
-
-
-#include <Process.h>
-
+#define VERSION "1.0"
 
 typedef struct Value {
     char  *idName;
@@ -45,15 +40,18 @@ typedef struct Value {
 } Value;
 
 class Ubidots {
-   public:
-      Ubidots(char* token);
+ public:
+      explicit Ubidots(char* token, char* server = SERVER);
       void init();
       float getValue(String id);
       void add(char* id, float value, char* ctext = NULL);
       void setDataSourceTag(char *tag);
-      void setDataSourceName(char *name); 
+      void setDataSourceName(char *name);
       void sendAll();
-   private:
+      // Old functions
+      bool saveValue(String id, float value);
+
+ private:
       char* _token;
       char* _dsName;
       char*_dsTag;
@@ -62,4 +60,4 @@ class Ubidots {
       Value * val;
 };
 
-#endif
+#endif  // _UbidotsYUN_H_
