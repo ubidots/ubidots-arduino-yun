@@ -41,7 +41,7 @@ typedef struct Value {
 
 class Ubidots {
  public:
-      explicit Ubidots(char* token, char* server = SERVER);
+      Ubidots(char* token, char* server = SERVER);
       void init();
       float getValue(String id);
       void add(char* id, float value, char* ctext = NULL);
@@ -55,6 +55,7 @@ class Ubidots {
       char* _token;
       char* _dsName;
       char*_dsTag;
+      char* _server;
       uint8_t currentValue;
       float parseValue(char *body);
       Value * val;
