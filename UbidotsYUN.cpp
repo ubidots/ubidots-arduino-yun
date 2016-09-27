@@ -28,8 +28,9 @@ Made by Mateo Velez - Metavix for Ubidots Inc
 /**
  * Constructor.
  */
-Ubidots::Ubidots(char* token) {
+Ubidots::Ubidots(char* token, char* server) {
     _token = token;
+    _server = server;
     _dsName = "YUN";
     _dsTag = "YUN";
     val = (Value *)malloc(MAX_VALUES*sizeof(Value));
@@ -145,24 +146,24 @@ void Ubidots::sendAll() {
     int timeout = 0;
     String value;
     char buffer[400];
-    snprintf(buffer, "(sleep 1\necho \"");
+    sprintf(buffer, "(sleep 1\necho \"");
     if (_dsName == "YUN") {
-        snprintf(buffer, "%s%s%s|POST|%s|%s=>", buffer, USER_AGENT, VERSION, _token, _dsTag);
+        sprintf(buffer, "%s%s%s|POST|%s|%s=>", buffer, USER_AGENT, VERSION, _token, _dsTag);
     } else {
-        snprintf(buffer, "%s%s%s|POST|%s|%s:%s=>", buffer, USER_AGENT, VERSION, _token, _dsTag, _dsName);
+        sprintf(buffer, "%s%s%s|POST|%s|%s:%s=>", buffer, USER_AGENT, VERSION, _token, _dsTag, _dsName);
     }
     for (i = 0; i < currentValue; ) {
         value = String((val + i)->idValue, 2);
-        snprintf(buffer, "%s%s:%s", buffer, (val + i)->idName, value.c_str());
+        sprintf(buffer, "%s%s:%s", buffer, (val + i)->idName, value.c_str());
         if ((val + i)->context != NULL) {
-            snprintf(buffer, "%s\\$%s", buffer, (val + i)->context);
+            sprintf(buffer, "%s\\$%s", buffer, (val + i)->context);
         }
         i++;
         if (i < currentValue) {
-            snprintf(buffer, "%s,", buffer);
+            sprintf(buffer, "%s,", buffer);
         }
     }
-    snprintf(buffer, "%s|end\") | telnet %s %s", buffer, SERVER, PORT);
+    sprintf(buffer, "%s|end\") | telnet %s %s", buffer, _server, PORT);
     SerialUSB.println(buffer);
     _client.runShellCommand(buffer);
     while (_client.running() && timeout < 10000) {
