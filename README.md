@@ -1,8 +1,10 @@
-# Arduino YÚN 
+# Arduino YÚN
 
 Ubidots-Arduino-YUN is an Arduino library for interacting with Ubidots through its API.
 
 The Arduino Yún is a microcontroller board based on the ATmega32u4 and the Atheros AR9331. The Atheros processor supports a Linux distribution based on OpenWrt named OpenWrt-Yun. The board has built-in Ethernet and WiFi support, a USB-A port, micro-SD card slot, 20 digital input/output pins, a 16 MHz crystal oscillator, and a micro USB connection.
+
+**IMPORTANT NOTE**: During the tests of this sample library we noticed that due to the hardware architecture the library presents inconsistencies making a POST and a GET request inside the same code. If you find the solution to this inconsistency, we invite you to make the Pull Request for our review.
 
 <aside class="warning">We upgrade the library to send values with name of a variable because the YUN library to run shell command in linux has small buffer to save a message.</aside>
 
@@ -33,7 +35,7 @@ Use the Arduino 1.6.5 version or newer with the Arduino YÚN.
 <aside class="warning">
 Make sure your Arduino is powered by a 1 amp or higher rated external power supply when using with the CC3000! Powering an Arduino + CC3000 from a computer/laptop USB port will lead to unstable behavior and lockups because the USB port can't supply enough power!
 </aside>
-    
+
 ## Send one value to Ubidots
 
 To send a value to Ubidots, go to **Sketch -> Examples -> UbidotsYUN library** and select the "saveValue" example. Set your Ubidots personal **TOKEn**
@@ -54,7 +56,7 @@ void setup() {
 void loop() {
   float value = analogRead(A0);
   client.add("Variable_Name", value);
-  client.sendAll(); 
+  client.sendAll();
 }
 
 ```
@@ -62,7 +64,7 @@ void loop() {
 
 ## Get one value from Ubidots
 
-To get the last value of a variable from Ubidots, go to **Sketch -> Examples -> UbidotsYUN library** and select the "getValue" example. 
+To get the last value of a variable from Ubidots, go to **Sketch -> Examples -> UbidotsYUN library** and select the "getValue" example.
 Put your Ubidots token and variable ID where indicated, as well as the WiFi settings.
 Upload the code, open the Serial monitor to check the results. If no response is seen, try unplugging your Arduino and then plugging it again. Make sure the baud rate of the Serial monitor is set to the same one specified in your code.
 
@@ -109,8 +111,7 @@ void loop() {
   client.add("Variable_Name", value);
   client.add("Variable_Name_2", value1);
   client.add("Variable_Name_3", value2);
-  client.sendAll(); 
+  client.sendAll();
 }
 
 ```
-
