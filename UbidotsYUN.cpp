@@ -156,7 +156,7 @@ void Ubidots::sendAll() {
         value = String((val + i)->idValue, 2);
         sprintf(buffer, "%s%s:%s", buffer, (val + i)->idName, value.c_str());
         if ((val + i)->context != NULL) {
-            sprintf(buffer, "%s\\$%s", buffer, (val + i)->context);
+            sprintf(buffer, "%s$%s", buffer, (val + i)->context);
         }
         i++;
         if (i < currentValue) {
