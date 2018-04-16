@@ -38,26 +38,45 @@ Make sure your Arduino is powered by a 1 amp or higher rated external power supp
 
 ## Send one value to Ubidots
 
-To send a value to Ubidots, go to **Sketch -> Examples -> UbidotsYUN library** and select the "saveValue" example. Set your Ubidots personal **TOKEn**
+To send a value to Ubidots, go to **Sketch -> Examples -> UbidotsYUN library** and select the "saveValue" example. Set your Ubidots personal **TOKEN**
 
 ```c++
-#include <UbidotsYUN.h>
-#define TOKEN "YOUR_TOKEN_HERE"
+// This example is to save a variable to the Ubidots API
 
+/****************************************
+ * Include Libraries
+ ****************************************/
+#include <UbidotsYUN.h>
+
+/****************************************
+ * Define Constants
+ ****************************************/
+#define TOKEN "YOUR_TOKEN_HERE"
+#define VARIABLE_LABEL "temperature"  // Change for your variable label desired
 
 Ubidots client(TOKEN);
 
+/****************************************
+ * Auxiliar Functions
+ ****************************************/
+
+//Put here your auxiliar functions
+
+/****************************************
+ * Main Functions
+ ****************************************/
 void setup() {
   client.init();
   Serial.begin(9600);
-
 }
 
 void loop() {
   float value = analogRead(A0);
-  client.add("Variable_Name", value);
+  client.add(VARIABLE_LABEL, value); // Change for your variable name
   client.sendAll();
+  delay(1000);
 }
+
 
 ```
 
@@ -69,20 +88,43 @@ Put your Ubidots token and variable ID where indicated, as well as the WiFi sett
 Upload the code, open the Serial monitor to check the results. If no response is seen, try unplugging your Arduino and then plugging it again. Make sure the baud rate of the Serial monitor is set to the same one specified in your code.
 
 ```c++
+// This example is to obtain a variable value from Ubidots 
+
+/****************************************
+ * Include Libraries
+ ****************************************/
 #include <UbidotsYUN.h>
+
+/****************************************
+ * Define Constants
+ ****************************************/
 #define TOKEN "YOUR_TOKEN_HERE"
-#define ID "YOUR_ID_HERE"
+#define DEVICE_LABEL "yun" // Assign the device label where the variable desired is located
+#define VARIABLE_LABEL "temperature" // Assign the variable label desired to obtain data
 
 Ubidots client(TOKEN);
 
+/****************************************
+ * Auxiliar Functions
+ ****************************************/
+
+//Put here your auxiliar functions
+
+/****************************************
+ * Main Functions
+ ****************************************/
 void setup() {
   client.init();
   Serial.begin(9600);
 }
 
 void loop() {
-  float value = client.getValue(ID);
+  float value = client.getValue(DEVICE_LABEL, VARIABLE_LABEL);
+  Serial.print("the value obtained is: ");
+  Serial.println(value);
+  delay(5000);
 }
+
 
 ```
 
@@ -91,27 +133,47 @@ void loop() {
 
 To send multiple values you can use our example in our library or copy the next code and do not forget to change set there your **TOKEN**
 
-```c
-#include <UbidotsYUN.h>
-#define TOKEN "YOUR_TOKEN_HERE"
+```c++
+// This example is to save multiple variables to the Ubidots API
 
+/****************************************
+ * Include Libraries
+ ****************************************/
+#include <UbidotsYUN.h>
+
+/****************************************
+ * Define Constants
+ ****************************************/
+#define TOKEN "YOUR_TOKEN_HERE"
+#define VARIABLE_LABEL_1 "temperature"  // Change for your variable label desired
+#define VARIABLE_LABEL_2 "humidity"  // Change for your variable label desired
+#define VARIABLE_LABEL_3 "pressure"  // Change for your variable label desired
 
 Ubidots client(TOKEN);
 
+/****************************************
+ * Auxiliar Functions
+ ****************************************/
+
+//Put here your auxiliar functions
+
+/****************************************
+ * Main Functions
+ ****************************************/
 void setup() {
   client.init();
   Serial.begin(9600);
-
 }
 
 void loop() {
-  float value = analogRead(A0);
-  float value1 = analogRead(A1);
-  float value2 = analogRead(A2);
-  client.add("Variable_Name", value);
-  client.add("Variable_Name_2", value1);
-  client.add("Variable_Name_3", value2);
+  float value_1 = analogRead(A0);
+  float value_2 = analogRead(A1);
+  float value_3 = analogRead(A2);
+  client.add(VARIABLE_LABEL_1, value_1);
+  client.add(VARIABLE_LABEL_2, value_2);
+  client.add(VARIABLE_LABEL_3, value_3);
   client.sendAll();
+  delay(1000); 
 }
 
 ```
