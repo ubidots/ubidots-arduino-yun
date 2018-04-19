@@ -21,7 +21,7 @@ OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION
 WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 Made by Mateo Velez - Metavix for Ubidots Inc
-Modified by Maria Hernandez 
+Modified by Maria Hernandez
 */
 
 #ifndef _UbidotsYUN_H_
@@ -38,6 +38,7 @@ typedef struct Value {
     char  *idName;
     char  *context;
     float idValue;
+    unsigned long timestamp_val;
 } Value;
 
 class Ubidots {
@@ -45,20 +46,20 @@ class Ubidots {
       Ubidots(char* token, char* server = SERVER);
       void init();
       float getValue(char* deviceLabel, char* variableLabel);
-      void add(char* id, float value, char* ctext = NULL);
-      void setDataSourceTag(char *tag);
-      void setDataSourceName(char *name);
+      void add(char* id, float value, char* ctext = NULL, long unsigned timestamp_val = NULL);
+      void setDeviceLabel(char *deviceLabel);
+      void setDeviceName(char *deviceName);
       void sendAll();
       // Old functions
       bool saveValue(String id, float value);
-
+      void setDataSourceTag(char *tag); // Deprecated
+      void setDataSourceName(char *name);  // Deprecated
  private:
       char* _token;
-      char* _dsName;
-      char*_dsTag;
+      char* _deviceName;
+      char* _deviceLabel;
       char* _server;
-      uint8_t currentValue;
-      float parseValue(char *body);
+      uint8_t _currentValue;
       Value * val;
 };
 

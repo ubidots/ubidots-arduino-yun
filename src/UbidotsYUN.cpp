@@ -1,4 +1,4 @@
-/*
+  /*
 Copyright (c) 2013-2016 Ubidots.
 
 Permission is hereby granted, free of charge, to any person obtaining
@@ -21,7 +21,7 @@ OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION
 WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 Made by Mateo Velez - Metavix for Ubidots Inc
-Modified by Maria Hernandez 
+Modified by Maria Hernandez
 */
 
 #include "UbidotsYUN.h"
@@ -32,25 +32,28 @@ Modified by Maria Hernandez
 Ubidots::Ubidots(char* token, char* server) {
     _token = token;
     _server = server;
-    _dsName = "YUN";
-    _dsTag = "YUN";
+    _deviceName = "YUN";
+    _deviceLabel = "YUN";
     val = (Value *)malloc(MAX_VALUES*sizeof(Value));
 }
-/** 
- * This function set a data source tag
- * @arg tag the tag to set
+
+/**
+ * This function set a new device label assigned by the user
+ * @arg deviceLabel the device label desired
  */
-void Ubidots::setDataSourceTag(char *tag) {
-    _dsTag = tag;
+void Ubidots::setDeviceLabel(char *deviceLabel) {
+    _deviceLabel = deviceLabel;
 }
-/** 
- * This function set a data source name
- * @arg name the name to set
+
+/**
+ * This function set a device name
+ * @arg deviceName the device name to set
  */
-void Ubidots::setDataSourceName(char *name) {
-    _dsName = name;
+void Ubidots::setDeviceName(char *deviceName) {
+    _deviceName =  deviceName;
 }
-/** 
+
+/**
  * This function start the YUN device
  */
 void Ubidots::init() {
@@ -59,27 +62,8 @@ void Ubidots::init() {
     Bridge.begin();
     digitalWrite(13, HIGH);
 }
-/** 
- * This function is to get value from the Ubidots API
- * @arg id the id where you will get the data
- * @return num the data that you get from the Ubidots API
- */
-float Ubidots::parseValue(char *body) {
-    String raw;
-    char *pch;
-    float num;
-    char reply[25];
-    uint8_t bodyPosinit = 0;
-    uint8_t bodyPosend = 0;
-    pch = strstr(body, "\"value\":");
-    raw = String(pch);
-    bodyPosinit = 9 + raw.indexOf("\"value\":");
-    bodyPosend = raw.indexOf(", \"timestamp\"");
-    raw.substring(bodyPosinit, bodyPosend).toCharArray(reply, 25);
-    num = atof(reply);
-    return num;
-}
-/** 
+
+/**
  * This function is to get value from the Ubidots API
  * @arg deviceLabel the device label where your variable is located
  * @arg variableLabel the variable label where you will get the data
@@ -89,13 +73,12 @@ float Ubidots::getValue(char* deviceLabel, char* variableLabel) {
     const char* url = "http://things.ubidots.com/api/v1.6/devices";
     Process _client;
     float num;
-    char buffer[400];
+    char request[400];
     char c[400];
     int i = 0;
     int timeout = 0;
-    sprintf(buffer, "curl -X GET %s/%s/%s/values?token=%s", url, deviceLabel, variableLabel, _token);
-    _client.runShellCommand(buffer);
-
+    sprintf(request, "curl -X GET %s/%s/%s/lv?token=%s -vvv", url, deviceLabel, variableLabel, _token);
+    _client.runShellCommand(request);
     while (!_client.available() && timeout < 10000) {
         timeout++;
         delay(1);
@@ -105,67 +88,71 @@ float Ubidots::getValue(char* deviceLabel, char* variableLabel) {
         i++;
     }
     c[i] = '\0';
-    while (_client.available()) {
-        _client.read();
-    }
     i = 0;
-    num = parseValue(c);
+    num = atof(c);
     Serial.flush();
     return num;
 }
-/** 
+
+/**
  * This function is to save data to the YUN cache
  * @arg id the name of your variable
  * @arg value the value to save
- * @arg ctext the context to save
+ * @arg ctext[OPTIONAL] the context to save
+ * @arg timestamp_val[OPTIONAL] the timestamp to save
  */
-void Ubidots::add(char *id, float value, char *ctext) {
-    (val+currentValue)->idName = id;
-    (val+currentValue)->idValue = value;
-    (val+currentValue)->context = ctext;
-    currentValue++;
-    if (currentValue > MAX_VALUES) {
-        currentValue = MAX_VALUES;
+void Ubidots::add(char *id, float value, char *ctext, long unsigned timestamp_val) {
+    (val+_currentValue)->idName = id;
+    (val+_currentValue)->idValue = value;
+    (val+_currentValue)->context = ctext;
+    (val+_currentValue)->timestamp_val = timestamp_val;
+    _currentValue++;
+    if (_currentValue > MAX_VALUES) {
+        Serial.println(F("You are sending more than 5 consecutives variables, you just could send 5 variables!"));
+        _currentValue = MAX_VALUES;
     }
 }
-/** 
+/**
  * This function is to send all data saved in add function
  */
 void Ubidots::sendAll() {
     Process _client;
     int i;
     int timeout = 0;
-    String value;
+    char str_value[10];
     char buffer[400];
     sprintf(buffer, "echo \"");
-    if (_dsName == "YUN") {
-        sprintf(buffer, "%s%s/%s|POST|%s|%s=>", buffer, USER_AGENT, VERSION, _token, _dsTag);
+    if (_deviceName == "YUN") {
+        sprintf(buffer, "%s%s/%s|POST|%s|%s=>", buffer, USER_AGENT, VERSION, _token, _deviceLabel);
     } else {
-        sprintf(buffer, "%s%s/%s|POST|%s|%s:%s=>", buffer, USER_AGENT, VERSION, _token, _dsTag, _dsName);
+        sprintf(buffer, "%s%s/%s|POST|%s|%s:%s=>", buffer, USER_AGENT, VERSION, _token, _deviceLabel, _deviceName);
     }
-    for (i = 0; i < currentValue; ) {
-        value = String((val + i)->idValue, 2);
-        sprintf(buffer, "%s%s:%s", buffer, (val + i)->idName, value.c_str());
+    for (i = 0; i < _currentValue; ) {
+        dtostrf((val + i)->idValue, 4, 2, str_value);
+        sprintf(buffer, "%s%s:%s", buffer, (val + i)->idName, str_value);
         if ((val + i)->context != NULL) {
             sprintf(buffer, "%s\\$%s", buffer, (val + i)->context);
         }
+        if ((val + i)->timestamp_val != NULL) {
+            sprintf(buffer, "%s\@%lu%s", buffer, (val + i)->timestamp_val, "000");
+        }
         i++;
-        if (i < currentValue) {
+        if (i < _currentValue) {
             sprintf(buffer, "%s,", buffer);
         }
     }
     sprintf(buffer, "%s|end\" | nc %s %s", buffer, _server, PORT);
-    SerialUSB.println(buffer);
+    Serial.println(buffer);
     _client.runShellCommand(buffer);
     while (_client.running() && timeout < 10000) {
         timeout++;
         delay(1);
     }
     Serial.flush();
-    currentValue = 0;
+    _currentValue = 0;
 }
-// Old functions of the library
 
+// Old functions of the library
 bool Ubidots::saveValue(String id, float value) {
     Process _client;
     int timeout = 0;
@@ -185,8 +172,9 @@ bool Ubidots::saveValue(String id, float value) {
     headers += "-X POST -d ";
     all = headers + data;
     all += url;
-
+    Serial.println("[WARNING] This method is -Deprecated-");
     _client.runShellCommand(all);
+
     while (!_client.available() && timeout > 10000) {
         timeout++;
         delay(1);
@@ -195,4 +183,20 @@ bool Ubidots::saveValue(String id, float value) {
         char c = _client.read();
     }
     Serial.flush();
+}
+
+/**
+ * This function set a data source tag
+ * @arg tag the tag to set
+ */
+void Ubidots::setDataSourceTag(char *tag) {
+    return setDeviceLabel(tag);
+}
+
+/**
+ * This function set a data source name
+ * @arg name the name to set
+ */
+void Ubidots::setDataSourceName(char *name) {
+    return setDeviceName(name);
 }
