@@ -1,4 +1,4 @@
-// This example is to obtain a variable value from Ubidots
+// This example is to save a variable with timestamp to the Ubidots API
 
 /****************************************
  * Include Libraries
@@ -9,8 +9,9 @@
  * Define Constants
  ****************************************/
 #define TOKEN "YOUR_TOKEN_HERE"
-#define DEVICE_LABEL "yun" // Assign the device label where the variable desired is located
-#define VARIABLE_LABEL "temperature" // Assign the variable label desired to obtain data
+#define VARIABLE_LABEL "temperature"  // Change for your variable label desired
+
+long unsigned timestamp = 1429272000; // init timestamp value
 
 Ubidots client(TOKEN);
 
@@ -29,10 +30,10 @@ void setup() {
 }
 
 void loop() {
-  float value = client.getValue(DEVICE_LABEL, VARIABLE_LABEL);
-  Serial.print("the value obtained is: ");
-  Serial.println(value);
-  /* Print value with 5 decimal points precision */
-  //Serial.println(value, 5);
-  delay(5000);
+  float value = analogRead(A0);
+  /* Send variable with timestamp to Ubidots*/
+  client.add(VARIABLE_LABEL, value, NULL, timestamp);
+  client.sendAll();
+  timestamp = timestamp + 600;
+  delay(1000);
 }
