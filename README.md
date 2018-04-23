@@ -31,7 +31,7 @@ The Arduino Yún is a microcontroller board based on the ATmega32u4 and the Athe
 Use the Arduino 1.6.5 version or newer with the Arduino YÚN.
 </aside>
 
-**Note:** The library will create a new Ubidots Device named **"YUN"**. If you desire assign a different device name or label, you can add the add in the `setup` of your code the following lines:
+**Note:** The library will create a new Ubidots Device named **"YUN"**. If you desire to assign a different device name or label, you can add it the add in the `setup` of your code the following lines:
 
 * To change the Device Name:
 
