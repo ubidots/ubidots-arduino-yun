@@ -11,7 +11,7 @@
 #define TOKEN "YOUR_TOKEN_HERE"
 #define VARIABLE_LABEL "temperature"  // Change for your variable label desired
 
-long unsigned timestamp = 1429272000; // init timestamp value
+long unsigned timestamp = 1429272000; // init timestamp value - (timestamp in SECONDS)
 
 Ubidots client(TOKEN);
 
