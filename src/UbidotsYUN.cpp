@@ -57,10 +57,7 @@ void Ubidots::setDeviceName(char *deviceName) {
  * This function start the YUN device
  */
 void Ubidots::init() {
-    pinMode(13, OUTPUT);
-    digitalWrite(13, LOW);
     Bridge.begin();
-    digitalWrite(13, HIGH);
 }
 
 /**
@@ -74,7 +71,7 @@ float Ubidots::getValue(char* deviceLabel, char* variableLabel) {
     Process _client;
     float num;
     char request[400];
-    char c[400];
+    char response[400];
     int i = 0;
     int timeout = 0;
     sprintf(request, "curl -X GET %s/%s/%s/lv?token=%s -vvv", url, deviceLabel, variableLabel, _token);
@@ -84,12 +81,12 @@ float Ubidots::getValue(char* deviceLabel, char* variableLabel) {
         delay(1);
     }
     while (_client.available() && i < 400) {
-        c[i] = _client.read();
+        response[i] = _client.read();
         i++;
     }
-    c[i] = '\0';
+    response[i] = '\0';
     i = 0;
-    num = atof(c);
+    num = atof(response);
     Serial.flush();
     return num;
 }
@@ -120,30 +117,30 @@ void Ubidots::sendAll() {
     int i;
     int timeout = 0;
     char str_value[10];
-    char buffer[400];
-    sprintf(buffer, "echo \"");
+    char request[400];
+    sprintf(request, "echo \"");
     if (_deviceName == "YUN") {
-        sprintf(buffer, "%s%s/%s|POST|%s|%s=>", buffer, USER_AGENT, VERSION, _token, _deviceLabel);
+        sprintf(request, "%s%s/%s|POST|%s|%s=>", request, USER_AGENT, VERSION, _token, _deviceLabel);
     } else {
-        sprintf(buffer, "%s%s/%s|POST|%s|%s:%s=>", buffer, USER_AGENT, VERSION, _token, _deviceLabel, _deviceName);
+        sprintf(request, "%s%s/%s|POST|%s|%s:%s=>", request, USER_AGENT, VERSION, _token, _deviceLabel, _deviceName);
     }
     for (i = 0; i < _currentValue; ) {
         dtostrf((val + i)->idValue, 4, 2, str_value);
-        sprintf(buffer, "%s%s:%s", buffer, (val + i)->idName, str_value);
+        sprintf(request, "%s%s:%s", request, (val + i)->idName, str_value);
         if ((val + i)->context != NULL) {
-            sprintf(buffer, "%s\\$%s", buffer, (val + i)->context);
+            sprintf(request, "%s\\$%s", request, (val + i)->context);
         }
         if ((val + i)->timestamp_val != NULL) {
-            sprintf(buffer, "%s\@%lu%s", buffer, (val + i)->timestamp_val, "000");
+            sprintf(request, "%s\@%lu%s", request, (val + i)->timestamp_val, "000");
         }
         i++;
         if (i < _currentValue) {
-            sprintf(buffer, "%s,", buffer);
+            sprintf(request, "%s,", request);
         }
     }
-    sprintf(buffer, "%s|end\" | nc %s %s", buffer, _server, PORT);
-    Serial.println(buffer);
-    _client.runShellCommand(buffer);
+    sprintf(request, "%s|end\" | nc %s %s", request, _server, PORT);
+    Serial.println(request);
+    _client.runShellCommand(request);
     while (_client.running() && timeout < 10000) {
         timeout++;
         delay(1);
@@ -151,6 +148,10 @@ void Ubidots::sendAll() {
     Serial.flush();
     _currentValue = 0;
 }
+
+/***************************************************************************
+DEPRECATED FUNCTIONS
+***************************************************************************/
 
 // Old functions of the library
 bool Ubidots::saveValue(String id, float value) {
@@ -186,6 +187,7 @@ bool Ubidots::saveValue(String id, float value) {
 }
 
 /**
+ * WARNING: This function is deprecated, use setDeviceLabel() instead
  * This function set a data source tag
  * @arg tag the tag to set
  */
@@ -194,6 +196,7 @@ void Ubidots::setDataSourceTag(char *tag) {
 }
 
 /**
+ * WARNING: This function is deprecated, use setDeviceName() instead
  * This function set a data source name
  * @arg name the name to set
  */
