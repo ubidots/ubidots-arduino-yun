@@ -1,4 +1,4 @@
-// This example is to save a variable to the Ubidots API
+// This example is to save a variable with timestamp to the Ubidots API
 
 /****************************************
  * Include Libraries
@@ -10,6 +10,8 @@
  ****************************************/
 #define TOKEN "YOUR_TOKEN_HERE"
 #define VARIABLE_LABEL "temperature"  // Change for your variable label desired
+
+long unsigned timestamp = 1429272000; // init timestamp value - (timestamp in SECONDS)
 
 Ubidots client(TOKEN);
 
@@ -29,7 +31,9 @@ void setup() {
 
 void loop() {
   float value = analogRead(A0);
-  client.add(VARIABLE_LABEL, value); // Change for your variable name
+  /* Send variable with timestamp to Ubidots*/
+  client.add(VARIABLE_LABEL, value, NULL, timestamp);
   client.sendAll();
+  timestamp = timestamp + 600;
   delay(1000);
 }
