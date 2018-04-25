@@ -12,7 +12,7 @@ The Arduino Yún is a microcontroller board based on the ATmega32u4 and the Athe
 
 * [Arduino YÚN](https://www.arduino.cc/en/Main/ArduinoBoardYun)
 * [Arduino IDE 1.6.5 or higher](https://www.arduino.cc/en/Main/Software)
-* [Ubidots Arduino YÚN library](https://github.com/ubidots/ubidots-arduino-yun/archive/master.zip)
+* [Ubidots Arduino YÚN library](https://github.com/ubidots/ubidots-arduino-yun/archive/v2.0.0.zip)
 
 ## Setup
 
@@ -21,7 +21,7 @@ The Arduino Yún is a microcontroller board based on the ATmega32u4 and the Athe
 3. Connect to this network and enter 192.168.240.1 into a web broswer to see the configuration page of the Arduino Yún. The default password is “arduino”
 4. Once you’re connected click on “system”
 5. Specify the Wireless Parameters of your Wi-Fi connection, then press “configure & restart”. This may take several minutes.
-6. Download the UbidotsYUN library [here](https://github.com/ubidots/ubidots-arduino-yun/archive/master.zip)
+6. Download the UbidotsYUN library [here](https://github.com/ubidots/ubidots-arduino-yun/archive/v2.0.0.zip)
 7. Go to the Arduino IDE, click on **Sketch -> Include Library -> Add .ZIP Library**
 8. Select the .ZIP file of Ubidots_FONA and then "Accept" or "Choose"
 9. Do the same to add the Adafruit_FONA library.
