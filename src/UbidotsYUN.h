@@ -32,7 +32,7 @@ Modified by Maria Hernandez
 #define PORT "9012"
 #define MAX_VALUES 5
 #define USER_AGENT "YUN"
-#define VERSION "2.0"
+#define VERSION "2.0.0"
 
 typedef struct Value {
     char  *idName;
@@ -50,10 +50,6 @@ class Ubidots {
       void setDeviceLabel(char *deviceLabel);
       void setDeviceName(char *deviceName);
       void sendAll();
-      // Old functions
-      bool saveValue(String id, float value);
-      void setDataSourceTag(char *tag); // Deprecated
-      void setDataSourceName(char *name);  // Deprecated
  private:
       char* _token;
       char* _deviceName;
