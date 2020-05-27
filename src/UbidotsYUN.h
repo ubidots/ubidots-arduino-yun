@@ -28,7 +28,7 @@ Modified by Maria Hernandez
 #define _UbidotsYUN_H_
 #include <Process.h>
 
-#define SERVER "translate.ubidots.com"
+#define SERVER "industrial.api.ubidots.com"
 #define PORT "9012"
 #define MAX_VALUES 5
 #define USER_AGENT "YUN"
